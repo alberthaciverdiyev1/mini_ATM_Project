@@ -28,7 +28,7 @@ class AccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string|min:3|max:255",
+            'name' => 'required|string|min:3|max:255|unique:accounts,name,NULL,NULL,user_id,' . auth()->id(),
             "type" => "required|string|in:normal,business",
             'user_id' => 'required|exists:users,id',
         ];

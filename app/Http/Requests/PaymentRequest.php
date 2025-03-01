@@ -30,7 +30,6 @@ class PaymentRequest extends FormRequest
             'amount' => ['required', 'numeric', 'min:0.01'],
             'type' => ['required', new Enum(PaymentType::class)],
             'source' => ['required', new Enum(PaymentSource::class)],
-            'status' => ['required', new Enum(PaymentStatus::class)],
         ];
     }
 }

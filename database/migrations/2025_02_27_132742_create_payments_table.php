@@ -16,8 +16,7 @@ return new class extends Migration
                 $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
                 $table->decimal('amount', 15, 4);
                 $table->tinyInteger('type')->comment('1: IN, 2: OUT');
-                $table->tinyInteger('source')->default(1)->comment('1: ATM, 2: User');
-                $table->tinyInteger('status')->default(1)->comment('1: Active, 2: Cancelled');
+                $table->boolean('is_atm')->default(0);
                 $table->timestamps();
                 $table->softDeletes();
         });
