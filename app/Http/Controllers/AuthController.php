@@ -45,6 +45,8 @@ class AuthController
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
+
+            $user->assignRole('user');
             $token = $user->createToken('mini_atm')->plainTextToken;
 
             return response()->json([

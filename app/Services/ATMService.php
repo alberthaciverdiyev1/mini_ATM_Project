@@ -62,7 +62,7 @@ class ATMService
             'is_atm' => PaymentSource::USER,
             'type' => PaymentType::OUT,
             'quantity' => $quantity,
-            'created_at' => now() //timestamp elave etmir
+            'created_at' => now() //timestamp zamani elave etmir
         ], array_keys($dispensed_banknotes), $dispensed_banknotes);
 
         self::insertPayment($data);
@@ -86,7 +86,7 @@ class ATMService
                 'amount' => $payment['amount'],
                 'is_atm' => $payment['is_atm'],
                 'type' => $payment['type'],
-                'created_at' => now() //timestamp elave etmir
+                'created_at' => now() //timestamp zamani elave etmir
             ]);
         })->toArray();
 

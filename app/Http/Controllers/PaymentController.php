@@ -10,6 +10,8 @@ use App\Http\Requests\WithdrawRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
 use App\Services\ATMService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\Rules\Enum;
 
 class PaymentController
@@ -24,14 +26,7 @@ class PaymentController
         $this->atmService = $atmService;
     }
 
-    public function list()
-    {
-//        $payments = Payment::whereNull('deleted_at')->get();
-        $payments = Payment::all();
-        return PaymentResource::collection($payments);
-    }
-
-    public function store(PaymentRequest $request)
+    public function store(PaymentRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
         return $this->atmService->insertPayment($validatedData);
@@ -42,4 +37,17 @@ class PaymentController
         $validatedData = $request->validated();
         return $this->atmService->withdraw($validatedData['account_id'], $validatedData['amount']);
     }
+
+    public function destroy(Payment $payment): JsonResponse
+    {
+        if (!auth()->user()->hasRole('admin')) {
+            return response()->json(['message' => __('Only admins can perform this operation.')], 403);
+        }
+
+        $payment->delete();
+
+        return response()->json(
+            ['message' => __('Payment successfully removed.')],200);
+    }
+
 }

@@ -13,6 +13,7 @@ trait Balance
         $totals = Payment::where('account_id', $this->id)
             ->whereIn('type', [PaymentType::IN, PaymentType::OUT])
             ->where('is_atm', 0)
+            ->withoutTrashed()
             ->selectRaw('sum(case when type = ? then amount else 0 end) as total_in', [PaymentType::IN])
             ->selectRaw('sum(case when type = ? then amount else 0 end) as total_out', [PaymentType::OUT])
             ->first();
@@ -31,6 +32,7 @@ trait Balance
             $totals = Payment::where('is_atm', 1)
                 ->whereIn('type', [PaymentType::IN, PaymentType::OUT])
                 ->where('amount', $banknote->value)
+                ->withoutTrashed()
                 ->selectRaw('
                 sum(case when type = ? then amount else 0 end) as total_in,
                 sum(case when type = ? then amount else 0 end) as total_out

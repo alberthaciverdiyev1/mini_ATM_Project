@@ -7,10 +7,11 @@ use App\Enums\PaymentType;
 use App\Traits\Balance;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use Balance;
+    use Balance,SoftDeletes;
 
     protected $fillable = [
         'account_id',
@@ -22,6 +23,8 @@ class Payment extends Model
     protected $casts = [
         'type' => PaymentType::class,
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function account(): BelongsTo
     {
