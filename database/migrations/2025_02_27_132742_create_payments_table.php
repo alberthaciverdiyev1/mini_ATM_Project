@@ -14,7 +14,7 @@ return new class extends Migration
             Schema::create('payments', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
-                $table->decimal('amount', 15, 4);
+                $table->decimal('amount', 15);
                 $table->tinyInteger('type')->comment('1: IN, 2: OUT');
                 $table->boolean('is_atm')->default(0);
                 $table->timestamps();

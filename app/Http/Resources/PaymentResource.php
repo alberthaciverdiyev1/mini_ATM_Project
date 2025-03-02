@@ -19,11 +19,9 @@ class PaymentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'account' => new AccountResource($this->whenLoaded('account')),
+            'account' => new AccountResource($this->whenLoaded('account_id')),
             'amount' => $this->amount,
             'type' => $this->type->name,
-            'source' => $this->source->name,
-            'status' => $this->status->name,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

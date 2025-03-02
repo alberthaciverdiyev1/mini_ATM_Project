@@ -36,7 +36,7 @@ class Handler extends ExceptionHandler
      * @param  \Throwable  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $exception):JsonResponse
+    public function render($request, Throwable $exception)
     {
         if ($exception instanceof ValidationException) {
 

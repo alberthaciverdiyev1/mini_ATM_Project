@@ -9,7 +9,7 @@ use App\Enums\PaymentType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class PaymentRequest extends FormRequest
+class WithdrawRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +27,8 @@ class PaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*.account_id' => ['required', 'exists:accounts,id'],
-            '*.amount' => ['required', 'numeric', new Enum(Banknotes::class)],
-            '*.type' => ['required', new Enum(PaymentType::class)],
-            '*.is_atm' => ['nullable', 'boolean'],
-            '*.quantity' => ['required', 'numeric', 'min:1'],
+            'account_id' => ['required', 'exists:accounts,id'],
+            'amount' => ['required', 'numeric'],
         ];
     }
 

@@ -6,12 +6,24 @@ use App\Enums\PaymentSource;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Http\Requests\PaymentRequest;
+use App\Http\Requests\WithdrawRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Services\ATMService;
 use Illuminate\Validation\Rules\Enum;
 
-class PaymentController extends Controller
+class PaymentController
 {
+    private ATMService $atmService;
+
+    /**
+     * @param ATMService $atmService
+     */
+    public function __construct(ATMService $atmService)
+    {
+        $this->atmService = $atmService;
+    }
+
     public function list()
     {
 //        $payments = Payment::whereNull('deleted_at')->get();
@@ -22,32 +34,12 @@ class PaymentController extends Controller
     public function store(PaymentRequest $request)
     {
         $validatedData = $request->validated();
-        $accountId = $request->input('account_id');
-        $amount = $validatedData['amount'];
-        $type = $validatedData['type'];
-
-        if ($type === PaymentType::OUT) {
-            $totals = Payment::where('account_id', $accountId)
-                ->whereIn('type', [PaymentType::IN, PaymentType::OUT])
-                ->selectRaw('sum(case when type = ? then amount else 0 end) as total_in', [PaymentType::IN])
-                ->selectRaw('sum(case when type = ? then amount else 0 end) as total_out', [PaymentType::OUT])
-                ->first();
-
-            $in = $totals->total_in ?? 0;
-            $out = $totals->total_out ?? 0;
-
-            if (($in - $out) - $amount < 0) {
-                return response()->json([
-                    'message' => 'Insufficient balance for the transaction.',
-                ], 400);
-            }
-        }
-
-        Payment::create($validatedData);
-
-        return response()->json([
-            'message' => 'Payment created successfully.',
-        ], 201);
+        return $this->atmService->insertPayment($validatedData);
     }
 
+    public function withdraw(WithdrawRequest $request)
+    {
+        $validatedData = $request->validated();
+        return $this->atmService->withdraw($validatedData['account_id'], $validatedData['amount']);
+    }
 }

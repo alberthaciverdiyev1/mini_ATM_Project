@@ -12,7 +12,9 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->get('/payments', [PaymentController::class, 'list']);
 Route::middleware('auth:sanctum')->post('/payments', [PaymentController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/payments/withdraw', [PaymentController::class, 'withdraw']);
 Route::middleware('auth:sanctum')->post('/accounts', [AccountController::class, 'store']);
+Route::middleware('auth:sanctum')->get('/accounts/{account}/history', [AccountController::class, 'history']);
 Route::middleware('auth:sanctum')->get('/accounts', [AccountController::class, 'list']);
 
 Route::post('/login', [AuthController::class, 'login']);

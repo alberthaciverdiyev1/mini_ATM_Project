@@ -11,8 +11,9 @@ use App\Http\Resources\PaymentResource;
 use App\Models\Account;
 use App\Models\Payment;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class AccountController extends Controller
+class AccountController
 {
     public function list()
     {
@@ -36,4 +37,14 @@ class AccountController extends Controller
 
         return new AccountResource($account);
     }
+
+    public function history(Account $account): JsonResponse
+    {
+        $payments = Payment::where('account_id', $account->id)->get();
+        return response()->json([
+            'status' => ResponseAlias::HTTP_OK,
+            'data' => PaymentResource::collection($payments),
+        ]);
+    }
+
 }

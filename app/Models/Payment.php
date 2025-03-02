@@ -3,27 +3,28 @@
 namespace App\Models;
 
 use App\Enums\PaymentSource;
-use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
+use App\Traits\Balance;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
 {
+    use Balance;
+
     protected $fillable = [
         'account_id',
         'amount',
         'type',
-        'source',
-        'status'
+        'is_atm',
     ];
 
     protected $casts = [
         'type' => PaymentType::class,
-        'source' => PaymentSource::class,
-        'status' => PaymentStatus::class,
     ];
-    public function account(): BelongsTo {
+
+    public function account(): BelongsTo
+    {
         return $this->belongsTo(Account::class);
     }
 }
